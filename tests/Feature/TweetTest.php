@@ -25,3 +25,26 @@ it('should be able to create a tweet', function () {
         ->body->toBe('my first tweet')
         ->created_by->toBe($user->id);
 });
+
+it('should make sure that only authenticated users can create a tweet', function () {
+    livewire(Create::class)
+        ->set('body', 'my first tweet')
+        ->call('createTweet')
+        ->assertForbidden();
+
+    actingAs(User::factory()->create());
+
+    livewire(Create::class)
+        ->set('body', 'my first tweet')
+        ->call('createTweet')
+        ->assertEmitted('tweet::created');
+});
+
+test('body is required', function () {
+    actingAs(User::factory()->create());
+
+    livewire(Create::class)
+        ->set('body', null)
+        ->call('createTweet')
+        ->assertHasErrors(['body' => 'required']);
+});
