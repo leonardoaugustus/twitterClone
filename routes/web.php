@@ -18,6 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::view('twitter', 'twitter')->name('twitter');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
